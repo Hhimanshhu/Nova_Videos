@@ -63,6 +63,13 @@ const LoginPage = () => {
         </button>
       </form>
 
+      <p className="text-right text-sm">
+  <a href="/forgot-password" className="text-red-500 hover:underline">
+    Forgot Password?
+  </a>
+</p>
+
+
       <p className="mt-4 text-center">
         Don't have an account?{' '}
         <a href="/register" className="text-red-500 hover:underline">

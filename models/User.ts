@@ -5,8 +5,11 @@ export interface IUser extends Document {
   email: string;
   password: string;
   name: string;
+  resetToken?: string;
+  resetTokenExpiry?: number;
   createdAt?: Date;
   updatedAt?: Date;
+
 }
 
 // Define schema
@@ -15,6 +18,9 @@ const userSchema = new Schema<IUser>(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    resetToken: String,
+    resetTokenExpiry: Number,
+
   },
   { timestamps: true }
 );

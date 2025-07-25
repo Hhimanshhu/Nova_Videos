@@ -12,7 +12,7 @@ const Navbar = () => {
     <nav className="bg-gray-900 text-white shadow-md px-6 py-3 flex items-center justify-between">
       {/* Left - Logo */}
       <Link href="/" className="text-xl font-bold hover:text-red-500">
-        🎥 Videoler
+        🎥 NOVI
       </Link>
 
       {/* Center - Nav Links (Desktop) */}
@@ -22,6 +22,10 @@ const Navbar = () => {
         {status === 'authenticated' && (
           <Link href="/upload" className="hover:text-red-500">Upload</Link>
         )}
+        <Link href="/about" className="hover:text-red-500 transition-colors">
+  About
+</Link>
+
       </div>
 
       {/* Right - User Actions */}
