@@ -15,11 +15,17 @@ const DashboardPage = () => {
   const { data: session } = useSession();
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(false);
+  const [visibility, setVisibility] = useState<'all' | 'public' | 'private'>('all');
+
 
   const fetchMyVideos = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/video?filter=my`);
+      let url = `/api/video?filter=my`;
+      if (visibility === 'public') url += `&visibility=public`;
+      if (visibility === 'private') url += `&visibility=private`;
+
+      const res = await fetch(url);
       if (!res.ok) throw new Error('Failed to fetch videos');
       const data = await res.json();
       setVideos(data);
@@ -32,17 +38,40 @@ const DashboardPage = () => {
 
   useEffect(() => {
     fetchMyVideos();
+  }, [visibility]);
+
+
+  useEffect(() => {
+    fetchMyVideos();
   }, []);
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">My Uploads</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-2xl font-bold">My Uploads</h2>
+
+        <select
+          value={visibility}
+          onChange={(e) => setVisibility(e.target.value as 'all' | 'public' | 'private')}
+          className="border border-gray-300 dark:border-gray-700 p-2 rounded text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-white"
+        >
+          <option value="all">All Videos</option>
+          <option value="public">Public Videos</option>
+          <option value="private">Private Videos</option>
+        </select>
+      </div>
 
       {loading ? (
         <p className="text-center">Loading...</p>
       ) : videos.length === 0 ? (
         <div className="flex items-center justify-center h-64">
-          <p className="text-center text-gray-500">No videos uploaded yet.</p>
+          <p className="text-center text-gray-500">
+            {visibility === 'public'
+              ? 'No public videos found.'
+              : visibility === 'private'
+                ? 'No private videos found.'
+                : 'No videos uploaded yet.'}
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -63,8 +92,8 @@ const DashboardPage = () => {
                 <div className="flex justify-end">
                   <span
                     className={`text-xs font-semibold px-2 py-1 rounded ${video.isPublic
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-yellow-100 text-yellow-700'
+                      ? 'bg-green-100 text-green-700'
+                      : 'bg-yellow-100 text-yellow-700'
                       }`}
                   >
                     {video.isPublic ? 'Public' : 'Private'}
@@ -73,10 +102,10 @@ const DashboardPage = () => {
               </div>
             </div>
           ))}
-            </div>
-          )}
         </div>
-      );
+      )}
+    </div>
+  );
 };
 
 export default DashboardPage;

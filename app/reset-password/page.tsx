@@ -6,7 +6,7 @@ export default function ResetPasswordPage() {
   const router = useRouter();
   const params = useSearchParams();
   const token = params.get('token');
-  const email = params.get('email');
+
 
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -14,11 +14,12 @@ export default function ResetPasswordPage() {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    if (!token || !email) {
-      alert('Invalid or expired reset link');
-      router.push('/login');
-    }
-  }, [token, email, router]);
+  if (!token) {
+    alert('Invalid or expired reset link');
+    router.push('/login');
+  }
+}, [token, router]);
+
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +33,7 @@ export default function ResetPasswordPage() {
     const res = await fetch('/api/auth/reset-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token, email, password }),
+      body: JSON.stringify({ token, password }),
     });
 
     setLoading(false);

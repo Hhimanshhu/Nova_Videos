@@ -11,17 +11,28 @@ export async function GET(req: NextRequest) {
 
     const session = await getServerSession(authOptions);
     const searchParams = req.nextUrl.searchParams;
-    const filter = searchParams.get("filter"); // 'my' to fetch my videos
+    const filter = searchParams.get("filter");       // 'my'
+    const visibility = searchParams.get("visibility"); // 'public' or 'private'
 
-    let videos;
+    let query: any = {};
 
-    if (filter === "my" && session?.user?.id) {
-      // ✅ If user logged in & filter is "my" → fetch user's videos
-      videos = await Video.find({ userId: session.user.id }).sort({ createdAt: -1 }).lean();
+    if (filter === "my") {
+      if (!session?.user?.id) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      query.userId = session.user.id;
     } else {
-      // ✅ Otherwise fetch only public videos
-      videos = await Video.find({ isPublic: true }).sort({ createdAt: -1 }).lean();
+      // If not "my", fetch only public videos
+      query.isPublic = true;
     }
+
+    // ✅ Add visibility filter (only for "my" videos)
+    if (filter === "my") {
+      if (visibility === "public") query.isPublic = true;
+      if (visibility === "private") query.isPublic = false;
+    }
+
+    const videos = await Video.find(query).sort({ createdAt: -1 }).lean();
 
     return NextResponse.json(videos, { status: 200 });
 
@@ -30,6 +41,32 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Failed to fetch videos" }, { status: 500 });
   }
 }
+
+// export async function GET(req: NextRequest) {
+//   try {
+//     await connectToDatabase();
+
+//     const session = await getServerSession(authOptions);
+//     const searchParams = req.nextUrl.searchParams;
+//     const filter = searchParams.get("filter"); // 'my' to fetch my videos
+
+//     let videos;
+
+//     if (filter === "my" && session?.user?.id) {
+//       // ✅ If user logged in & filter is "my" → fetch user's videos
+//       videos = await Video.find({ userId: session.user.id }).sort({ createdAt: -1 }).lean();
+//     } else {
+//       // ✅ Otherwise fetch only public videos
+//       videos = await Video.find({ isPublic: true }).sort({ createdAt: -1 }).lean();
+//     }
+
+//     return NextResponse.json(videos, { status: 200 });
+
+//   } catch (error) {
+//     console.error("Fetch videos error:", error);
+//     return NextResponse.json({ error: "Failed to fetch videos" }, { status: 500 });
+//   }
+// }
 
 
 // ✅ POST - Upload New Video
