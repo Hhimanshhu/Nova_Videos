@@ -20,7 +20,7 @@ export default function Home() {
     try {
       const res = await fetch('/api/video?filter=public');
       const data = await res.json();
-      setVideos(data);
+      setVideos(data.videos || []);
     } catch (err) {
       console.error('Fetch public videos failed:', err);
     } finally {

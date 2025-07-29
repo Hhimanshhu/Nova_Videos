@@ -13,6 +13,7 @@ export interface IVideo {
   thumbnailUrl: string;
   controls?: boolean;
   isPublic?: boolean;
+  isTrashed?: false;
   transformation?: {
     height?: number;
     width?: number;
@@ -28,11 +29,12 @@ export interface IVideo {
 const videoSchema = new Schema<IVideo>({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  url: { type: String, required: true },
+  url: { type: String, required: true },  
   thumbnailUrl: { type: String, required: true },
   controls: { type: Boolean, default: true },
   isPublic: { type: Boolean, default: true }, 
   userId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" }, 
+  isTrashed: { type: Boolean, default: false },
   transformation: {
     height: { type: Number, default: 1920 },
     width: { type: Number, default: 1080 },
