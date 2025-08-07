@@ -11,18 +11,3 @@ const UploadPage = () => {
 };
 
 export default UploadPage;
-
-
-
-// import UploadForm from '../components/UploadForm';
-
-// const UploadPage = () => {
-//   return (
-//     <div className="min-h-screen">
-//       <UploadForm />
-//     </div>
-//   );
-// };
-
-// export default UploadPage;
-

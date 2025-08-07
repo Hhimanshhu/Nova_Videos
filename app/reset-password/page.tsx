@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
   if (!token) {
-    alert('Invalid or expired reset link');
+    toast.error('Invalid or expired reset link');
     router.push('/login');
   }
 }, [token, router]);
@@ -24,7 +25,7 @@ export default function ResetPasswordPage() {
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirm) {
-      alert('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
 
@@ -42,7 +43,7 @@ export default function ResetPasswordPage() {
       setDone(true);
     } else {
       const err = await res.json();
-      alert(err.error || 'Reset failed');
+      toast.error(err.error || 'Reset failed');
     }
   };
 

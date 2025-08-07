@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import FileUpload from './FileUpload';
+import { toast } from 'react-hot-toast';
 
 
 const UploadForm = () => {
@@ -18,7 +19,15 @@ const UploadForm = () => {
     e.preventDefault();
 
     if (!title || !description || !videoUrl || !thumbnailUrl) {
-      alert('Please upload video & thumbnail first, then fill all fields');
+      toast('Please upload video & thumbnail first, then fill all fields', {
+        icon: '⚠️',
+        style: {
+          background: '#fef3c7', // light yellow
+          color: '#92400e',       // dark amber
+          border: '1px solid #facc15',
+        },
+      });
+
       return;
     }
 
@@ -39,7 +48,7 @@ const UploadForm = () => {
 
       if (!res.ok) {
         const errorData = await res.json();
-        alert(errorData.error || 'Failed to upload');
+        toast.error(errorData.error || 'Failed to upload');
         setLoading(false);
         return;
       }
@@ -47,7 +56,7 @@ const UploadForm = () => {
       router.push('/dashboard');
     } catch (error) {
       console.error('Upload error:', error);
-      alert('An error occurred during upload');
+      toast.error('An error occurred during upload');
     } finally {
       setLoading(false);
     }
@@ -85,7 +94,7 @@ const UploadForm = () => {
 
     } catch (err) {
       console.error('Upload failed:', err);
-      alert('Failed to upload file');
+      toast.error('Failed to upload file');
     }
   };
 
@@ -153,71 +162,6 @@ const UploadForm = () => {
         </button>
       </form>
     </div>
-
-    //     <div className="max-w-xl mx-auto p-6">
-    //       <h2 className="text-2xl font-bold mb-4 text-center">Upload Video</h2>
-    //       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-    //         <input
-    //           type="text"
-    //           value={title}
-    //           onChange={(e) => setTitle(e.target.value)}
-    //           placeholder="Video Title"
-    //           required
-    //           className="border p-2 rounded"
-    //         />
-    //         <textarea
-    //           value={description}
-    //           onChange={(e) => setDescription(e.target.value)}
-    //           placeholder="Video Description"
-    //           required
-    //           rows={3}
-    //           className="border p-2 rounded"
-    //         ></textarea>
-
-    //         <div className="flex flex-col gap-1">
-    //           <label className="font-semibold">Upload Video File</label>
-    //           <div className="border rounded p-2">
-    //             <FileUpload
-    //               onSuccess={(res) => setVideoUrl(res.url)}
-    //               onProgress={(progress) => console.log('Video Upload:', progress)}
-    //               fileType="video"
-    //             />
-    //             {videoUrl && <p className="text-green-500 text-sm mt-1">✅ Video uploaded successfully!</p>}
-    //           </div>
-    //         </div>
-
-    //         <div className="flex items-center gap-2">
-    //   <input
-    //     type="checkbox"
-    //     checked={isPublic}
-    //     onChange={() => setIsPublic(!isPublic)}
-    //     className="w-4 h-4"
-    //   />
-    //   <label>Make this video Public</label>
-    // </div>
-
-
-    //         <div className="flex flex-col gap-1">
-    //           <label className="font-semibold">Upload Thumbnail Image</label>
-    //           <div className="border rounded p-2">
-    //             <FileUpload
-    //               onSuccess={(res) => setThumbnailUrl(res.url)}
-    //               onProgress={(progress) => console.log('Thumbnail Upload:', progress)}
-    //               fileType="image"
-    //             />
-    //             {thumbnailUrl && <p className="text-green-500 text-sm mt-1">✅ Thumbnail uploaded successfully!</p>}
-    //           </div>
-    //         </div>
-
-    //         <button
-    //           type="submit"
-    //           disabled={loading}
-    //           className="bg-red-500 text-white py-2 rounded hover:bg-red-600 transition"
-    //         >
-    //           {loading ? 'Uploading...' : 'Submit'}
-    //         </button>
-    //       </form>
-    //     </div>
   );
 };
 

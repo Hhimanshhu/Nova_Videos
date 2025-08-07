@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import toast from 'react-hot-toast';
+
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -21,7 +23,7 @@ const LoginPage = () => {
       });
 
       if (res?.error) {
-        alert(res.error || 'Login failed');
+        toast.error(res.error || "Login failed");
         setLoading(false);
         return;
       }
@@ -29,7 +31,7 @@ const LoginPage = () => {
       router.push('/dashboard');
     } catch (err) {
       console.error('Login error:', err);
-      alert('An error occurred during login');
+      toast.error('An error occurred during login');
       setLoading(false);
     }
   };
