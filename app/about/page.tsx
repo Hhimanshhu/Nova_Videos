@@ -6,7 +6,7 @@ export default function AboutPage() {
         <h1 className="text-4xl font-bold mb-4 text-red-500">About VideoUploader</h1>
         <p className="text-lg mb-8">
           <span className="font-semibold">VideoUploader</span> is a modern web application that allows users to upload,
-          manage, and share videos with ease. Designed with a Modern UI's, secure authentication, and cloud-based file handling,
+          manage, and share videos with ease. Designed with a Modern UI&apos;s, secure authentication, and cloud-based file handling,
           it empowers creators to showcase their work effortlessly.
         </p>
 

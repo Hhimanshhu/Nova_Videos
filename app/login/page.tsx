@@ -10,7 +10,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   // 🔐 Redirect if user is already logged in
   useEffect(() => {
@@ -83,7 +83,7 @@ const LoginPage = () => {
       </p>
 
       <p className="mt-4 text-center">
-        Don't have an account?{' '}
+        Don&apos;t have an account?{' '}
         <a href="/register" className="text-red-500 hover:underline">
           Sign Up
         </a>
@@ -94,18 +94,27 @@ const LoginPage = () => {
 
 export default LoginPage;
 
-// 'use client';
-// import { useState } from 'react';
-// import { useRouter } from 'next/navigation';
-// import { signIn } from 'next-auth/react';
-// import toast from 'react-hot-toast';
 
+// 'use client';
+// import { useState, useEffect } from 'react';
+// import { useRouter } from 'next/navigation';
+// import { signIn, useSession } from 'next-auth/react';
+// import toast from 'react-hot-toast';
 
 // const LoginPage = () => {
 //   const [email, setEmail] = useState('');
 //   const [password, setPassword] = useState('');
 //   const [loading, setLoading] = useState(false);
+
 //   const router = useRouter();
+//   const { data: session, status } = useSession();
+
+//   // 🔐 Redirect if user is already logged in
+//   useEffect(() => {
+//     if (status === 'authenticated') {
+//       router.replace('/dashboard'); // ✅ No back history
+//     }
+//   }, [status, router]);
 
 //   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 //     e.preventDefault();
@@ -119,7 +128,7 @@ export default LoginPage;
 //       });
 
 //       if (res?.error) {
-//         toast.error(res.error || "Login failed");
+//         toast.error(res.error || 'Login failed');
 //         setLoading(false);
 //         return;
 //       }
@@ -131,6 +140,9 @@ export default LoginPage;
 //       setLoading(false);
 //     }
 //   };
+
+//   // 🕒 Optional loading state while checking session
+//   if (status === 'loading') return <p className="text-center mt-10">Checking session...</p>;
 
 //   return (
 //     <div className="p-4 max-w-md mx-auto mt-10">
@@ -162,16 +174,15 @@ export default LoginPage;
 //       </form>
 
 //       <p className="text-right text-sm">
-//   <a href="/forgot-password" className="text-red-500 hover:underline">
-//     Forgot Password?
-//   </a>
-// </p>
-
+//         <a href="/forgot-password" className="text-red-500 hover:underline">
+//           Forgot Password?
+//         </a>
+//       </p>
 
 //       <p className="mt-4 text-center">
 //         Don't have an account?{' '}
 //         <a href="/register" className="text-red-500 hover:underline">
-//            Sign Up
+//           Sign Up
 //         </a>
 //       </p>
 //     </div>
@@ -179,4 +190,3 @@ export default LoginPage;
 // };
 
 // export default LoginPage;
-

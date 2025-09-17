@@ -1,31 +1,68 @@
-type FetchOptions ={
-    method? : "GET" | "POST" | "PUT" | "DELETE";
-    body?: any;
-    headers?: Record<string, string>;
-}
+type FetchOptions<TBody = unknown> = {
+  method?: "GET" | "POST" | "PUT" | "DELETE";
+  body?: TBody;
+  headers?: Record<string, string>;
+};
 
-class ApiClient {
-    private baseUrl: string;
+export class ApiClient {
+  private baseUrl: string;
 
-    constructor(baseUrl: string) {
-        this.baseUrl = baseUrl;
+  constructor(baseUrl: string) {
+    this.baseUrl = baseUrl;
+  }
+
+  async fetch<TResponse, TBody = unknown>(
+    path: string,
+    options: FetchOptions<TBody> = {}
+  ): Promise<TResponse> {
+    const url = `${this.baseUrl}${path}`;
+    const response = await fetch(url, {
+      method: options.method || "GET",
+      headers: {
+        "Content-Type": "application/json",
+        ...options.headers,
+      },
+      body: options.body ? JSON.stringify(options.body) : undefined,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    async fetch<T>(path: string, options: FetchOptions = {}): Promise<T> {
-        const url = `${this.baseUrl}${path}`;
-        const response = await fetch(url, {
-            method: options.method || "GET",
-            headers: {
-                "Content-Type": "application/json",
-                ...options.headers,
-            },
-            body: options.body ? JSON.stringify(options.body) : undefined,
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        return response.json();
-    }
+    return response.json() as Promise<TResponse>;
+  }
 }
+
+
+
+// type FetchOptions ={
+//     method? : "GET" | "POST" | "PUT" | "DELETE";
+//     body?: any;
+//     headers?: Record<string, string>;
+// }
+
+// class ApiClient {
+//     private baseUrl: string;
+
+//     constructor(baseUrl: string) {
+//         this.baseUrl = baseUrl;
+//     }
+
+//     async fetch<T>(path: string, options: FetchOptions = {}): Promise<T> {
+//         const url = `${this.baseUrl}${path}`;
+//         const response = await fetch(url, {
+//             method: options.method || "GET",
+//             headers: {
+//                 "Content-Type": "application/json",
+//                 ...options.headers,
+//             },
+//             body: options.body ? JSON.stringify(options.body) : undefined,
+//         });
+
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! status: ${response.status}`);
+//         }
+
+//         return response.json();
+//     }
+// }

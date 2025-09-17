@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
     const limit = 6;
     const skip = (page - 1) * limit;
 
-    let query: any = {};
+    const query: Record<string, unknown> = {};
 
     if (search) {
       query.title = { $regex: search, $options: "i" };
@@ -92,7 +92,6 @@ export async function POST(request: NextRequest) {
       url,
       thumbnailUrl,
       dimensions,
-      isPublic = true,
     } = body;
 
     if (!title || !description || !url || !thumbnailUrl || !dimensions) {
