@@ -11,7 +11,7 @@ type DeleteVideoContext = {
   };
 };
 
-export async function DELETE(req: NextRequest, context: DeleteVideoContext) {
+export async function DELETE(context: DeleteVideoContext) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
