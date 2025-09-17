@@ -2,7 +2,7 @@ import { connectToDatabase } from "@/lib/db";
 import Video from "@/models/Video";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 // ✅ Define context type separately
 type DeleteVideoContext = {
