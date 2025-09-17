@@ -4,12 +4,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
-// Define proper type for route params
-interface RouteContext {
-  params: { id: string };
-}
-
-export async function DELETE(req: NextRequest, context: RouteContext) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -19,7 +17,7 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
     await connectToDatabase();
 
     const result = await Video.deleteOne({
-      _id: context.params.id,
+      _id: params.id,
       userId: session.user.id,
     });
 
