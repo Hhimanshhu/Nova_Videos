@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Mongoose } from "mongoose";
 
 const MONGODB_URL = process.env.MONGODB_URL as string;
 
@@ -8,11 +8,22 @@ if (!MONGODB_URL) {
   );
 }
 
-let cached = (global as any).mongoose;
-if (!cached) {
-  cached = (global as any).mongoose = { conn: null, promise: null };
+interface MongooseCache {
+  conn: Mongoose | null;
+  promise: Promise<Mongoose> | null;
 }
-export async function connectToDatabase() {
+
+// 👇 Ensure we extend NodeJS globalThis properly
+declare global {
+  // eslint-disable-next-line no-var
+  var _mongoose: MongooseCache | undefined;
+}
+
+// Use global cache if available
+const cached: MongooseCache = global._mongoose ?? { conn: null, promise: null };
+global._mongoose = cached;
+
+export async function connectToDatabase(): Promise<Mongoose> {
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
@@ -21,11 +32,7 @@ export async function connectToDatabase() {
       maxPoolSize: 10,
     };
 
-    cached.promise = mongoose
-      .connect(MONGODB_URL, opts)
-      .then((mongooseInstance) => {
-        return mongooseInstance;
-      });
+    cached.promise = mongoose.connect(MONGODB_URL, opts);
   }
 
   try {
@@ -37,6 +44,8 @@ export async function connectToDatabase() {
 
   return cached.conn;
 }
+
+
 
 // import mongoose from "mongoose";
 
