@@ -4,10 +4,12 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+// Define proper type for route params
+interface RouteContext {
+  params: { id: string };
+}
+
+export async function DELETE(req: NextRequest, context: RouteContext) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -17,7 +19,7 @@ export async function DELETE(
     await connectToDatabase();
 
     const result = await Video.deleteOne({
-      _id: params.id,
+      _id: context.params.id,
       userId: session.user.id,
     });
 
@@ -40,6 +42,7 @@ export async function DELETE(
     );
   }
 }
+
 
 
 // import { connectToDatabase } from "@/lib/db";
